@@ -1,0 +1,12 @@
+baselength = 0.5 meter with encoder
+turnRight = 90degree with encoder 
+turnLeft = 90degree with encoder
+
+Forward(baselength)
+turnLeft()
+Forward(baselength)
+turnRight()
+Forward(baselength)
+turnRight()
+Forward(baselenght)
+

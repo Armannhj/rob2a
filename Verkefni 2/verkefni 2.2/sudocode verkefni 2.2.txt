@@ -1,0 +1,5 @@
+baselength = 0.5 meter with encoder
+For loop x 5
+	driveforward(baselength)
+	driveBack(baselength)
+	add 0,5 to baselength
