@@ -44,7 +44,6 @@ void driveForward(int forwardtime)
   				motor[rightMotor] = 80;
   				motor[leftMotor] = 60;
   			}
-
   	}
 }
 

@@ -37,34 +37,39 @@
 // Gylfi og Armann
 // Rob2A3U vor2017
 // Verkefni 2.1
+void driveForward()
+{
+	motor[rightMotor] = 70;
+	motor[leftMotor] = 70;
+}
 
+void driveBack()
+{
+	motor[rightMotor] = -70;
+	motor[leftMotor] = -70;
+}
+
+void stopMotor()
+{
+	motor[rightMotor] = 0;
+ 	motor[leftMotor]  = 0;
+ 	wait1Msec(1000);  // 1 Second Delay
+}
 //+++++++++++++++++++++++++++++++++++++++++++++| MAIN |+++++++++++++++++++++++++++++++++++++++++++++++
 task main()
 {
 	int a; // Int value a
 	int drivetime = 0; // Int value drivetime that is the time that motor goes in Msec
-	int Msec = 1150; // Int value prefix for the time
+	int Msec = 1550; // Int value prefix for the time
 	for (a = 0; a < 5; a = a +1) // For loop that goes 5 times
 	{
 		drivetime = drivetime + Msec; // drivetime value given a value then get + drivetime in after each loop
-		wait1Msec(1000);						  // Robot waits for 1000 milliseconds before executing program
-
-																	// Move forward at full power for 1150 msec
-		motor[rightMotor] = 127;		  // Motor on port2 is run at full (127) power forward
-		motor[leftMotor]  = 127;		  // Motor on port3 is run at full (127) power forward
+		driveForward();
 		wait1Msec(drivetime);
-
-		motor[rightMotor] = 0;		    // Right motor giving the value to zero for 1 sec
-		motor[leftMotor]  = 0;				// Left motor giving the value to zero for 1 sec
-		wait1Msec(1000);
-
-		motor[rightMotor] = -127;		  // Motor on port2 is run at full (127) power reverse
-		motor[leftMotor]  = -127;		  // Motor on port3 is run at full (127) power reverse
-		wait1Msec(drivetime);					// Robot waits until the drivetime runs out.
-
-		motor[rightMotor] = 0;				// Right motor giving the value to zero for 1 sec
-		motor[leftMotor]  = 0;				// Left motor giving the value to zero for 1 sec
-		wait1Msec(1000);
+		stopMotor();
+		driveBack();
+		wait1Msec(drivetime);
+		stopMotor();
 
 	} // For loop ends
 	// Program ends, and the robot stops
