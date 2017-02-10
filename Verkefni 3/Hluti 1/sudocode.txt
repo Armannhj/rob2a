@@ -1,0 +1,36 @@
+1.hluti 
+Press button(xArm)
+	if press up 
+		armMotor = 127
+	else if press down 
+		armmotor = -127
+	else 
+		armmotor = 0
+
+Press button(xClaw)
+	if press buttonClose
+		clawMotor = 127
+	else if buttonOpen
+		clawMotor = -127
+	else 
+		clawMotor = 0
+
+Press button(xForward)
+	if press buttonForward
+		motorRight = 127
+		motorLeft = 127
+
+Press button(xBack)
+	if press buttonBack
+		motorRight = -127
+		motorLeft = -127
+
+Press button(xRight)
+	if press buttonRight
+		motorRigth = -60
+		moterLeft = 60
+
+Press button(xLeft)
+	if press buttonLeft
+		motorRight = 60
+		motorLeft = -60
