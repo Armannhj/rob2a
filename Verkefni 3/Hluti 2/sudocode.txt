@@ -1,0 +1,10 @@
+2.hluti 
+Press button(start verkefni 2.3)
+	{
+		Starttask(drive);
+	}
+Press button(stop all)
+	{
+		Stoptask(drive);
+		Stopmotor();
+	}
