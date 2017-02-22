@@ -1,0 +1,22 @@
+If presse button 8u
+	StopAllTask()
+	motor[rightMotor] = 0;
+	motor[leftMotor] = 0;
+	run = false;
+
+
+
+while run == true 
+	while (SensorValue(sonarSensor) > x || SensorValue(sonarSensor) == -1)
+	{
+		motor[rightMotor] = 63;
+		motor[leftMotor] = 63;
+	}
+	while (SensorValue(sonarSensor) <= y)
+	{
+		motor[rightMotor] = 63;
+		motor[leftMotor] = -63;
+	}
+	
+	
+	
