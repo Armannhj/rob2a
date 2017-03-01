@@ -1,3 +1,4 @@
+#pragma config(Sensor, in4,    LightSen,       sensorReflection)
 #pragma config(Sensor, in6,    ,               sensorGyro)
 #pragma config(Sensor, dgtl1,  rightEncoder,   sensorQuadEncoder)
 #pragma config(Sensor, dgtl3,  leftEncoder,    sensorQuadEncoder)
@@ -42,7 +43,7 @@ task main()
  	int run = 1;
  	while(run == 1)
 	{
-		if(vexRT[Btn8D] == 1)
+		while(SensorValue(LightSen) < 250)
 		{
 			int rundrive = 1;
 			while(rundrive == 1)
@@ -60,12 +61,23 @@ task main()
 						stopMotor();
 						rundrive = 0;
 					}
+					if(SensorValue(LightSen) >= 250)
+					{
+						stopMotor();
+						rundrive = 0;
+						break;
+					}
 				}
 				while(SensorValue(sonarSensor) < 75)
 				{
 					motor[rightMotor] = -63;
 					motor[leftMotor] = 63;
-
+					if(SensorValue(LightSen) >= 250)
+					{
+						stopMotor();
+						rundrive = 0;
+						break;
+					}
 					if(SensorValue(sonarSensor) > 74 || SensorValue(sonarSensor) == -1)
 					{
 						break;
@@ -80,6 +92,10 @@ task main()
 				}
 
 
+			}
+			if(SensorValue(LightSen) >= 250)
+			{
+				break;
 			}
 		}
 	}
