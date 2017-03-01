@@ -12,11 +12,16 @@ while run == true
 		motor[rightMotor] = 63;
 		motor[leftMotor] = 63;
 	}
-	while (SensorValue(sonarSensor) <= y)
+	while (SensorValue(sonarSensor) <= y || SensorValue(sonarSensor) == -1)
 	{
 		motor[rightMotor] = 63;
 		motor[leftMotor] = -63;
 	}
+
+if (SenorValue(lightSensor) > x)
+	run = true
+else if (SenorValue(lightSensor) < x)
+	run = false
 	
 	
 	
