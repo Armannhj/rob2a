@@ -1,0 +1,24 @@
+While(true)
+{
+	if(SensorValue(LineFollowrRight) > threshold)
+	{
+		motor[leftMotor] = 63
+		motor[rightMotor] = 0;
+	}
+	if(SensorValue(lineFollowerCENTER) > threshold)
+	{
+		motor[leftMotor] = 63
+		motor[rightMotor] = 63;
+	}
+	if(SensorValue(lineFollowerLEFT) > threshold)
+	{
+		motor[leftMotor] = 63
+		motor[rightMotor] = 0;
+	}
+	if(vexRT[Btn8U] == 1)
+	{
+		StopAllTasks();
+		stopMotor();
+		rundrive = 0;
+	}
+}
