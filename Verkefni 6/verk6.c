@@ -3,7 +3,7 @@
 #pragma config(Sensor, in8,    LineLeft,       sensorLineFollower)
 #pragma config(Sensor, dgtl1,  rightEncoder,   sensorQuadEncoder)
 #pragma config(Sensor, dgtl3,  leftEncoder,    sensorQuadEncoder)
-#pragma config(Sensor, dgtl6,  touchSensor,    sensorNone)
+#pragma config(Sensor, dgtl6,  touchSensor,    sensorTouch)
 #pragma config(Sensor, dgtl8,  sonarSensor,    sensorSONAR_cm)
 #pragma config(Sensor, dgtl12, armEncoder,     sensorQuadEncoder)
 #pragma config(Motor,  port2,           clawMotor,     tmotorServoContinuousRotation, openLoop)
@@ -43,11 +43,17 @@ void stopMotor()
 //+++++++++++++++++++++++++++++++++++++++++++++| MAIN |+++++++++++++++++++++++++++++++++++++++++++++++
 task main()
 {
-  wait1Msec(2000);          // The program waits for 2000 milliseconds before continuing.
+
+	wait1Msec(1000);
 
   int threshold = 2875;      /* found by taking a reading on both DARK and LIGHT    */
                             /* surfaces, adding them together, then dividing by 2. */
-  while(true)
+
+
+
+  int drive = 1;
+  int tala_1 = 40, tala_2 = 50;
+  while(drive == 1)
   {
   	if(vexRT[Btn8U] == 1)
 		{
@@ -61,23 +67,52 @@ task main()
     if(SensorValue(LineRight) > threshold)
     {
       // counter-steer right:
-      motor[leftMotor]  = 63;
-      motor[rightMotor] = 0;
+      motor[leftMotor]  = 58;
+      motor[rightMotor] = 29;
     }
     // CENTER sensor sees dark:
     if(SensorValue(LineCenter) > threshold)
     {
       // go straight
-      motor[leftMotor]  = 63;
-      motor[rightMotor] = 63;
+      motor[leftMotor]  = 58;
+      motor[rightMotor] = 58;
     }
     // LEFT sensor sees dark:
     if(SensorValue(LineLeft) > threshold)
     {
       // counter-steer left:
-      motor[leftMotor]  = 0;
-      motor[rightMotor] = 63;
+      motor[leftMotor]  = 29;
+      motor[rightMotor] = 58;
     }
+
+    if(SensorValue(sonarSensor) > tala_1 && SensorValue(sonarSensor) < tala_2)
+    {
+    	stopMotor();
+    	wait1Msec(1000);
+
+    	motor[armMotor] = -127;
+    	if (SensorValue(touchSensor) == 1)
+    	{
+    		motor[armMotor] = 0;
+    		motor[clawMotor] = -127;
+    		wait1Msec(1500);
+    		tala_1 = 9998;
+    		tala_2 = 9999;
+    	}
+
+    }
+    if(SensorValue(sonarSensor) <= 10)
+    {
+    	stopMotor();
+    	drive = 0;
+    	break;
+  	}
   }
+  if(SensorValue(sonarSensor) <= 10)
+  {
+  		motor[clawMotor] = 127;
+  		motor[armMotor] = 127;
+  }
+
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
