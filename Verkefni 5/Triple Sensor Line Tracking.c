@@ -34,7 +34,11 @@
 |*    Analog - Port 2     lineFollowerCENTER  VEX Light Sensor      Front-center, facing down         *|
 |*    Analog - Port 3     lineFollowerLEFT    VEX Light Sensor      Front-left, facing down           *|
 \*-----------------------------------------------------------------------------------------------4246-*/
-
+void stopMotor()
+{
+	motor[rightMotor] = 0;
+	motor[leftMotor] = 0;
+}
 
 //+++++++++++++++++++++++++++++++++++++++++++++| MAIN |+++++++++++++++++++++++++++++++++++++++++++++++
 task main()
