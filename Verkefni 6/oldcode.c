@@ -1,9 +1,9 @@
-#pragma config(Sensor, in6,    rightLineFollower, sensorLineFollower)
-#pragma config(Sensor, in7,    centerLineFollower, sensorLineFollower)
-#pragma config(Sensor, in8,    leftLineFollower, sensorLineFollower)
+#pragma config(Sensor, in6,    LineRight,      sensorLineFollower)
+#pragma config(Sensor, in7,    LineCenter,     sensorLineFollower)
+#pragma config(Sensor, in8,    LineLeft,       sensorLineFollower)
 #pragma config(Sensor, dgtl1,  rightEncoder,   sensorQuadEncoder)
 #pragma config(Sensor, dgtl3,  leftEncoder,    sensorQuadEncoder)
-#pragma config(Sensor, dgtl6,  limitSwitch,    sensorTouch)
+#pragma config(Sensor, dgtl6,  touchSensor,    sensorTouch)
 #pragma config(Sensor, dgtl8,  sonarSensor,    sensorSONAR_cm)
 #pragma config(Sensor, dgtl12, armEncoder,     sensorQuadEncoder)
 #pragma config(Motor,  port2,           clawMotor,     tmotorServoContinuousRotation, openLoop)
@@ -34,114 +34,85 @@
 |*    Analog - Port 2     lineFollowerCENTER  VEX Light Sensor      Front-center, facing down         *|
 |*    Analog - Port 3     lineFollowerLEFT    VEX Light Sensor      Front-left, facing down           *|
 \*-----------------------------------------------------------------------------------------------4246-*/
-#ifndef VERK6_H_
-#define VERK6_H_
-
-int checkButtonSequence()
+void stopMotor()
 {
-    if (vexRT[Btn7L] && vexRT[Btn7D])
-        return 1;
-    return 0;
+	motor[rightMotor] = 0;
+	motor[leftMotor] = 0;
 }
 
-int basicMove(int speed) {
-
-    motor[leftMotor] = speed;
-    motor[rightMotor] = speed;
-
-    return checkButtonSequence();
-}
-
-void wait(int milliseconds) {
-    motor[leftMotor] = 0;
-    motor[rightMotor] = 0;
-
-    wait1Msec(milliseconds);
-}
-
-void basicSwingTurn(int direction) {
-    if (direction == -1) {
-        motor[rightMotor] = 60;
-        motor[leftMotor] = 20;
-    }
-    else {
-        motor[rightMotor] = 20;
-        motor[leftMotor] = 60;
-    }
-}
-
-int followLine(int threshold)
+//+++++++++++++++++++++++++++++++++++++++++++++| MAIN |+++++++++++++++++++++++++++++++++++++++++++++++
+task main()
 {
-    if (checkButtonSequence())
-        return 1;
 
-    //Turn right
-    if (SensorValue[rightLineFollower] > threshold) {
-        basicSwingTurn(1);
+	wait1Msec(1000);
+
+  int threshold = 2875;      /* found by taking a reading on both DARK and LIGHT    */
+                            /* surfaces, adding them together, then dividing by 2. */
+
+
+
+  int drive = 1;
+  int tala_1 = 40, tala_2 = 50;
+  while(drive == 1)
+  {
+  	if(vexRT[Btn8U] == 1)
+		{
+			StopAllTasks();
+			stopMotor();
+
+		}
+
+
+    // RIGHT sensor sees dark:
+    if(SensorValue(LineRight) > threshold)
+    {
+      // counter-steer right:
+      motor[leftMotor]  = 58;
+      motor[rightMotor] = 29;
     }
-
-    if (SensorValue[centerLineFollower] > threshold) {
-        if (basicMove(60))
-            return 1;
+    // CENTER sensor sees dark:
+    if(SensorValue(LineCenter) > threshold)
+    {
+      // go straight
+      motor[leftMotor]  = 58;
+      motor[rightMotor] = 58;
     }
-
-    //Turn left
-    if (SensorValue[leftLineFollower] > threshold) {
-        basicSwingTurn(-1);
+    // LEFT sensor sees dark:
+    if(SensorValue(LineLeft) > threshold)
+    {
+      // counter-steer left:
+      motor[leftMotor]  = 29;
+      motor[rightMotor] = 58;
     }
 
-    return 0;
+    if(SensorValue(sonarSensor) > tala_1 && SensorValue(sonarSensor) < tala_2)
+    {
+    	stopMotor();
+    	wait1Msec(1000);
+
+    	motor[armMotor] = -127;
+    	if (SensorValue(touchSensor) == 1)
+    	{
+    		motor[armMotor] = 0;
+    		motor[clawMotor] = -127;
+    		wait1Msec(1500);
+    		tala_1 = 9998;
+    		tala_2 = 9999;
+    	}
+
+    }
+    if(SensorValue(sonarSensor) <= 10)
+    {
+    	stopMotor();
+    	drive = 0;
+    	break;
+  	}
+  }
+  if(SensorValue(sonarSensor) <= 10)
+  {
+  		motor[clawMotor] = 127;
+  		motor[armMotor] = 127;
+  }
+
 }
-
-void clawGrab()
-{
-		motor[clawMotor] = -80;
-		wait1Msec(1000);
-    while (SensorValue[limitSwitch] == 0)
-        motor[armMotor] = -100;
-
-
-
-    basicMove(50);
-    wait1Msec(750);
-  	wait(500);
-
-    motor[clawMotor] = 127;
-    wait1Msec(1000);
-    motor[armMotor] = 0;
-
-    motor[armMotor] = 60;
-    wait1Msec(700);
-    motor[armMotor] = 0;
-}
-
-void clawReset()
-{
-    motor[clawMotor] = 60;
-    wait1Msec(500);
-    motor[clawMotor] = 0;
-
-    while (SensorValue[limitSwitch] == 0)
-        motor[armMotor] = -100;
-    motor[armMotor] = 0;
-
-    motor[armMotor] = 127;
-    wait1Msec(1000);
-    motor[armMotor] = 0;
-}
-
-void turnAround()
-{
-    wait(500);
-    motor[leftMotor] = 60;
-    motor[rightMotor] = -60;
-    wait1Msec(2000);
-
-    motor[leftMotor] = 0;
-    motor[rightMotor] = 0;
-}
-
-#endif
-
-
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
