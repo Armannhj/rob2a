@@ -1,11 +1,15 @@
-   --- [PSUEDOCODE] ---
 
-   while true:
-   if centerLineFollower detects line:
-   move_forwards()
-   else if leftLineFollower detects line:
-   turn_left()
-else:
-turn right
+while true:
+   	if centerLineFollower detects line:
+   		move_forwards()
 
---- [PSUEDOCODE] ---
+   	else if leftLineFollower detects line:
+   		turn_left()
+
+	else:
+		turn right
+	
+	if sonar > 17
+		clawgrab down 
+		turn around
+	
